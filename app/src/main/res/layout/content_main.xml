@@ -10,44 +10,44 @@
     tools:context=".MainActivity"
     android:weightSum="1">
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
+        android:id="@+id/TextView1"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.05"
-        android:text="Restaurant 1" />
+        android:text="" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText2"
+        android:id="@+id/TextView2"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.05"
-        android:text="Restaurant 2" />
+        android:text="" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText3"
+        android:id="@+id/TextView3"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.05"
-        android:text="Restaurant 3" />
+        android:text="" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText4"
+        android:id="@+id/TextView4"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.05"
-        android:text="Restaurant 4" />
+        android:text="" />
 
-    <EditText
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText5"
+        android:id="@+id/TextView5"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.05"
-        android:text="Restaurant 5" />
+        android:text="" />
 
 </LinearLayout>

@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">FoodVote</string>
     <string name="action_settings">Settings</string>
+
+    <string name="R1">""</string>
+    <string name="R2">""</string>
+    <string name="R3">""</string>
+    <string name="R4">""</string>
+    <string name="R5">""</string>
 </resources>
