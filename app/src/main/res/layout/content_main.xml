@@ -10,7 +10,24 @@
     tools:context=".MainActivity"
     android:weightSum="1">
 
+<<<<<<< HEAD
     <TextView
+=======
+    <EditText
+        android:id="@+id/location_message"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/edit_message" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/button_send"
+        android:onClick="sendMessage" />
+
+    <EditText
+>>>>>>> aebdccafaa44df73c2e3729b85e0d960dd728698
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/TextView1"

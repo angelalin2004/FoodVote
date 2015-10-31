@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+<<<<<<< HEAD
 import android.widget.TextView;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -26,8 +27,18 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+=======
+import android.content.Intent;
+import android.widget.EditText;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import android.util.Log;
+>>>>>>> aebdccafaa44df73c2e3729b85e0d960dd728698
 
 public class MainActivity extends AppCompatActivity {
+    public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
 
 
 
@@ -148,5 +159,40 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+<<<<<<< HEAD
+=======
+    /** Called when the user clicks the Send button */
+    public void sendMessage(View view) {
+        // Do something in response to button
+        Intent intent = new Intent(this, DisplayMessageActivity.class);
+        EditText editText = (EditText) findViewById(R.id.location_message);
+        String message = editText.getText().toString();
+
+        try {
+            URL url = new URL("https://api.yelp.com/v2/search" + "?limit=1" + "&location=" + "San Diego");
+            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line).append("\n");
+                }
+                bufferedReader.close();
+                Log.i("sendMessage",stringBuilder.toString());
+                intent.putExtra(EXTRA_MESSAGE, stringBuilder.toString());
+            }
+            finally{
+                urlConnection.disconnect();
+            }
+        }
+        catch(Exception e) {
+            Log.e("sendMessage", e.getMessage(), e);
+        }
+
+        Log.i("sendMessage",message);
+        startActivity(intent);
+    }
+>>>>>>> aebdccafaa44df73c2e3729b85e0d960dd728698
 }
 
