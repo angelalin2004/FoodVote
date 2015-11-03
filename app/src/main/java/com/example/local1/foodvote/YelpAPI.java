@@ -88,12 +88,12 @@ public class YelpAPI extends AsyncTask<String, Void, String> {
 
     /*The actual API Call process*/
     @Override
-    protected String doInBackground(String...cities){
+    protected String doInBackground(String...Locations){
 
         Log.println(Log.ERROR, "YELPAPI:", "IN doInBackground!");
 
         /*Search for Buisnesses in the passed city parameter*/
-        String APIRes = searchForBusinessesByLocation("restuarant", cities[0]);
+        String APIRes = searchForBusinessesByLocation("restuarant", Locations[0]);
         Log.println(Log.ERROR, "YELPAPI:", "Search Passed!");
         /*Activity.runOnUiThread(new Runnable() {
             public void run() {
@@ -141,7 +141,8 @@ public class YelpAPI extends AsyncTask<String, Void, String> {
         OAuthRequest request = createOAuthRequest(SEARCH_PATH);
         Log.println(Log.ERROR, "YELPAPI:", "Made OAuthRequest!");
         request.addQuerystringParameter("term", term);
-        request.addQuerystringParameter("location", location);
+        request.addQuerystringParameter("ll", location);
+        //request.addQuerystringParameter("location", location);
         request.addQuerystringParameter("limit", String.valueOf(SEARCH_LIMIT));
         Log.println(Log.ERROR, "YELPAPI:", "Passed searchForBuisnessByLocation!");
         return sendRequestAndGetResponse(request);

@@ -23,6 +23,15 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.common.ConnectionResult;
+import android.location.Location;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+
+import com.google.android.gms.common.api.GoogleApiClient.ConnectionCallbacks;
+import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
+
+
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -41,7 +50,8 @@ import java.io.InputStreamReader;
 import android.util.Log;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements
+        ConnectionCallbacks, OnConnectionFailedListener{
     public final static String EXTRA_MESSAGE = "com.mycompany.myfirstapp.MESSAGE";
 
 
@@ -56,6 +66,11 @@ public class MainActivity extends AppCompatActivity {
     private static final String TOKEN_SECRET = "_iN4GhZsdgojn1WYZTHOi-q2jzM";
 
     GoogleApiClient mGoogleApiClient;
+    Location mLastLocation;
+    String mLatitudeText;
+    String mLongitudeText;
+
+    YelpAPI yAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,25 +89,131 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /*Create a YelpAPI Instance*/
-        YelpAPI yAPI = new YelpAPI(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
+        //YelpAPI yAPI = new YelpAPI(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
 
+        // First we need to check availability of play services
+        if (checkPlayServices()) {
+
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            // Building the GoogleApi client
+            //buildGoogleApiClient();
+        }
+        /*mGoogleApiClient.connect();
+        //getLocation();
+
+
+        while(!mGoogleApiClient.isConnected()){
+            if(!mGoogleApiClient.isConnecting()){
+                Log.println(Log.ERROR, "MAIN:", "Not Connecting");
+            }
+        }*/
+
+
+
+        //Log.println(Log.ERROR, "MAIN:", "mLatitudeText = " + mLatitudeText);
+        //Log.println(Log.ERROR, "MAIN:", "mLongitudeText = " + mLongitudeText);
+        //String Location = mLatitudeText + ", " + mLongitudeText;
         /*Call Helper method to get results of API Call in JSON Format*/
-        String JSONOutput = setUpAPIRet(yAPI, "La Jolla, CA");
+        //String JSONOutput = setUpAPIRet(yAPI, Location);
 
         /*Display the Relevent Data from the YELP Api Call*/
-        ParseAndDisplayRestaurantOutput(JSONOutput);
+        //ParseAndDisplayRestaurantOutput(JSONOutput);
 
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.println(Log.ERROR, "MAIN:", "In OnStart");
+        yAPI = new YelpAPI(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
+
+
+
+        //LocationConnector LC = new LocationConnector(this);
+        String location = "";
+
+        mGoogleApiClient.connect();
+        /*try {
+
+            Thread mainT = Thread.currentThread();
+            location = LC.execute(mainT).get();
+            Thread.sleep(10000);
+        }
+        catch(Exception e){
+            System.out.print("Hi");
+        }*/
+
+        //getLocation();
+
+        //int time = 0;
+
+        //String YelpJSON = setUpAPIRet(yAPI, location);
+
+
+    }
+
+    /*public void getLocation(){
+        Log.println(Log.ERROR, "MAIN:", "In getLocation");
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+        Log.println(Log.ERROR, "MAIN:", "LastLocation: " + mLastLocation);
+        if (mLastLocation != null) {
+            mLatitudeText = String.valueOf(mLastLocation.getLatitude());
+            mLongitudeText = String.valueOf(mLastLocation.getLongitude());
+        }
+    }*/
+
+    //@Override
+    public void onConnected(Bundle bundle){
+        Log.println(Log.ERROR, "MAIN:", "In onConnected");
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(
+                mGoogleApiClient);
+
+        if (mLastLocation != null) {
+            mLatitudeText = String.valueOf(mLastLocation.getLatitude());
+            mLongitudeText = String.valueOf(mLastLocation.getLongitude());
+            String location = mLatitudeText + ", " + mLongitudeText;
+            String YelpJSON = setUpAPIRet(yAPI, location);
+            ParseAndDisplayRestaurantOutput(YelpJSON);
+        }
+    }
+
+
+    @Override
+    public void onConnectionSuspended(int x){
+        Log.println(Log.ERROR, "MAIN:", "Connection Suspended");
+        Context context = getApplicationContext();
+        CharSequence text = "Connection Lost";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult c){
+        Log.println(Log.ERROR, "MAIN:", "Connection Failed");
+        Context context = getApplicationContext();
+        CharSequence text = "Connection Failed";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
     /*Method gets the API call in JSON format*/
-    public String setUpAPIRet(YelpAPI Y, String City){
+    public String setUpAPIRet(YelpAPI Y, String Location){
         /*To Return*/
         String Ret = "";
 
         try {
             /*Get the return from the API call*/
-            Ret = Y.execute(City).get();
+            Ret = Y.execute(Location).get();
         }
         catch(Exception e){
             System.out.print("Hi");
@@ -145,13 +266,15 @@ public class MainActivity extends AppCompatActivity {
         B5.setText(R5);
     }
 
-    protected synchronized void buildGoogleApiClient() {
+    /*protected synchronized void buildGoogleApiClient() {
+        Log.println(Log.ERROR, "MAIN:", "In buildGoogleApiClient");
+        //Context context = getApplicationContext();
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
                 .addApi(LocationServices.API)
                 .build();
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -182,6 +305,27 @@ public class MainActivity extends AppCompatActivity {
 
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
+    }
+
+    /**
+     * Method to verify google play services on the device
+     * */
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil
+                .isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this,
+                        1000).show();
+            } else {
+                Toast.makeText(getApplicationContext(),
+                        "This device is not supported.", Toast.LENGTH_LONG)
+                        .show();
+                finish();
+            }
+            return false;
+        }
+        return true;
     }
 
     /** Called when the user clicks the Send button */
