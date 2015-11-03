@@ -24,7 +24,52 @@
         android:text="@string/button_send"
         android:onClick="sendMessage" />-->
 
-    <TextView
+    <Button
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"
+        android:background="@android:color/transparent"
+        android:id="@+id/Button1"
+        android:text=""
+        android:onClick="RestaurantClicked" />
+
+    <Button
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"
+        android:background="@android:color/transparent"
+        android:id="@+id/Button2"
+        android:text=""
+        android:onClick="RestaurantClicked" />
+
+    <Button
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"
+        android:background="@android:color/transparent"
+        android:id="@+id/Button3"
+        android:text=""
+        android:onClick="RestaurantClicked" />
+
+    <Button
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"
+        android:background="@android:color/transparent"
+        android:id="@+id/Button4"
+        android:text=""
+        android:onClick="RestaurantClicked" />
+
+    <Button
+        android:layout_height="0dp"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.1"
+        android:background="@android:color/transparent"
+        android:id="@+id/Button5"
+        android:text=""
+        android:onClick="RestaurantClicked" />
+
+    <!--<TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/TextView1"
@@ -62,6 +107,6 @@
         android:id="@+id/TextView5"
         android:layout_gravity="center_horizontal"
         android:layout_weight="0.05"
-        android:text="" />
+        android:text="" />-->
 
 </LinearLayout>

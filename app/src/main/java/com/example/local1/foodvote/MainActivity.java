@@ -15,9 +15,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import android.widget.TextView;
+import android.widget.Button;
+import android.widget.Toast;
+import android.content.Context;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import com.beust.jcommander.JCommander;
 import com.beust.jcommander.Parameter;
@@ -50,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TOKEN = "6YSX1I448VpE2WQ1rrQv0NJRNJ9E9rOX";
     private static final String TOKEN_SECRET = "_iN4GhZsdgojn1WYZTHOi-q2jzM";
 
+    GoogleApiClient mGoogleApiClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,16 +77,39 @@ public class MainActivity extends AppCompatActivity {
         YelpAPI yAPI = new YelpAPI(CONSUMER_KEY, CONSUMER_SECRET, TOKEN, TOKEN_SECRET);
 
         /*Call Helper method to get results of API Call in JSON Format*/
-        String JSONOutput = setUpAPIRets(yAPI, "La Jolla, CA");
+        String JSONOutput = setUpAPIRet(yAPI, "La Jolla, CA");
 
-        /*Parse the JSON Format String*/
+        /*Display the Relevent Data from the YELP Api Call*/
+        ParseAndDisplayRestaurantOutput(JSONOutput);
+
+
+    }
+
+    /*Method gets the API call in JSON format*/
+    public String setUpAPIRet(YelpAPI Y, String City){
+        /*To Return*/
+        String Ret = "";
+
+        try {
+            /*Get the return from the API call*/
+            Ret = Y.execute(City).get();
+        }
+        catch(Exception e){
+            System.out.print("Hi");
+        }
+
+        Log.println(Log.ERROR, "MAIN:", "result = " + Ret);
+        return Ret;
+    }
+
+    public void ParseAndDisplayRestaurantOutput(String YelpJSON){
         JSONParser parser = new JSONParser();
         JSONObject response = null;
         try {
-            response = (JSONObject) parser.parse(JSONOutput);
+            response = (JSONObject) parser.parse(YelpJSON);
         } catch (ParseException pe) {
             System.out.println("Error: could not parse JSON response:");
-            System.out.println(JSONOutput);
+            System.out.println(YelpJSON);
             System.exit(1);
         }
 
@@ -102,38 +131,26 @@ public class MainActivity extends AppCompatActivity {
         String R5 = Buisness5.get("name").toString();
 
         /*GET EACH TEXT VIEW BOX*/
-        TextView tv1 = (TextView)findViewById(R.id.TextView1);
-        TextView tv2 = (TextView)findViewById(R.id.TextView2);
-        TextView tv3 = (TextView)findViewById(R.id.TextView3);
-        TextView tv4 = (TextView)findViewById(R.id.TextView4);
-        TextView tv5 = (TextView)findViewById(R.id.TextView5);
+        Button B1 = (Button)findViewById(R.id.Button1);
+        Button B2 = (Button)findViewById(R.id.Button2);
+        Button B3 = (Button)findViewById(R.id.Button3);
+        Button B4 = (Button)findViewById(R.id.Button4);
+        Button B5 = (Button)findViewById(R.id.Button5);
 
         /*SET EACH EXT VIEW BOX TO THE RESTUARANT NAME*/
-        tv1.setText(R1);
-        tv2.setText(R2);
-        tv3.setText(R3);
-        tv4.setText(R4);
-        tv5.setText(R5);
-
-
-
+        B1.setText(R1);
+        B2.setText(R2);
+        B3.setText(R3);
+        B4.setText(R4);
+        B5.setText(R5);
     }
 
-    /*Method gets the API call in JSON format*/
-    public String setUpAPIRets(YelpAPI Y, String City){
-        /*To Return*/
-        String Ret = "";
-
-        try {
-            /*Get the return from the API call*/
-            Ret = Y.execute(City).get();
-        }
-        catch(Exception e){
-            System.out.print("Hi");
-        }
-
-        Log.println(Log.ERROR, "MAIN:", "result = " + Ret);
-        return Ret;
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
     }
 
     @Override
@@ -158,6 +175,14 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void RestaurantClicked(View v){
+        Context context = getApplicationContext();
+        CharSequence text = "Restaurant Clicked";
+        int duration = Toast.LENGTH_SHORT;
+
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
 
     /** Called when the user clicks the Send button */
     /*public void sendMessage(View view) {
